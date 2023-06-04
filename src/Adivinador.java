@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JOptionPane;
 
 public class Adivinador extends JFrame {
 
@@ -17,6 +18,10 @@ public class Adivinador extends JFrame {
     private JLabel lblNewLabel_1;
     private int previousNumber;
     private Set<Integer> generatedNumbers;
+    private JPanel panel;
+    private Color[] colors;
+    private int limitemenor;
+    private int limitemayor;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -40,8 +45,7 @@ public class Adivinador extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 0));
 
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(128, 255, 128));
+        panel = new JPanel();
         contentPane.add(panel, BorderLayout.CENTER);
         panel.setLayout(null);
 
@@ -51,6 +55,8 @@ public class Adivinador extends JFrame {
         panel.add(lblNewLabel);
 
         generatedNumbers = new HashSet<>();
+        limitemenor = 0;
+        limitemayor = 1000000;
         previousNumber = generateRandomNumber();
         lblNewLabel_1 = new JLabel("Tu numero es: " + previousNumber);
         lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
@@ -71,41 +77,78 @@ public class Adivinador extends JFrame {
         panel_1.add(btnNewButton_3);
 
         btnNewButton_1.addActionListener(e -> {
-            int newNumber = generateRandomNumberGreaterThan(previousNumber);
+            if (limitemenor > limitemayor) {
+                JOptionPane.showMessageDialog(this, "Ya no hay mas numeros posibles.", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                return;
+            }
+
+            limitemenor = previousNumber + 1;
+            int newNumber = generateRandomNumber();
             previousNumber = newNumber;
             generatedNumbers.add(newNumber);
             lblNewLabel_1.setText("Tu numero es: " + previousNumber);
+
+            int colorIndex = getColorIndex();
+            panel.setBackground(colors[colorIndex]);
+
+
+
         });
 
         btnNewButton_3.addActionListener(e -> {
-            int newNumber = generateRandomNumberSmallerThan(previousNumber);
+
+            if (limitemenor > limitemayor) {
+                JOptionPane.showMessageDialog(this, "Ya no hay mas numeros posibles.", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                return;
+            }
+
+            limitemayor = previousNumber - 1;
+            int newNumber = generateRandomNumber();
             previousNumber = newNumber;
             generatedNumbers.add(newNumber);
             lblNewLabel_1.setText("Tu numero es: " + previousNumber);
+
+            int colorIndex = getColorIndex();
+            panel.setBackground(colors[colorIndex]);
         });
+
+        initializeColors();
+        panel.setBackground(colors[0]);
+    }
+
+    private void initializeColors() {
+        colors = new Color[] {
+                new Color(0, 0, 128),    
+                new Color(135, 206, 250),
+                new Color(255, 255, 0),
+                new Color(255, 165, 0),
+                new Color(255, 69, 0)
+        };
+    }
+
+    private int getColorIndex() {
+        int generatedNumbersSize = generatedNumbers.size();
+        if (generatedNumbersSize <= 3) {
+            return 0;
+        } else if (generatedNumbersSize <= 20) {
+            int colorIndex = (int) ((generatedNumbersSize - 4) / 4) + 1;
+            return Math.min(colorIndex, colors.length - 1);
+        } else {
+            return colors.length - 1;
+        }
     }
 
     private int generateRandomNumber() {
+        if (limitemenor > limitemayor) {
+            return limitemenor;
+        }
+
         int randomNumber;
         do {
-            randomNumber = (int) (Math.random() * 1000000);
+            randomNumber = (int) (limitemenor + Math.random() * (limitemayor - limitemenor + 1));
         } while (generatedNumbers.contains(randomNumber));
-        return randomNumber;
-    }
-
-    private int generateRandomNumberGreaterThan(int minValue) {
-        int randomNumber;
-        do {
-            randomNumber = (int) (Math.random() * 1000000);
-        } while (randomNumber <= minValue || generatedNumbers.contains(randomNumber));
-        return randomNumber;
-    }
-
-    private int generateRandomNumberSmallerThan(int maxValue) {
-        int randomNumber;
-        do {
-            randomNumber = (int) (Math.random() * 1000000);
-        } while (randomNumber >= maxValue || generatedNumbers.contains(randomNumber));
         return randomNumber;
     }
 }
