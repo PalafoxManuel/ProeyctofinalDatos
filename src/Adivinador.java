@@ -91,13 +91,14 @@ public class Adivinador extends JFrame {
 
             int colorIndex = getColorIndex();
             panel.setBackground(colors[colorIndex]);
+        });
 
-
-
+        btnNewButton_2.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Numero encontrado, reiniciando juego", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
+            restartGame();
         });
 
         btnNewButton_3.addActionListener(e -> {
-
             if (limitemenor > limitemayor) {
                 JOptionPane.showMessageDialog(this, "Ya no hay mas numeros posibles.", "Fin del juego", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
@@ -120,7 +121,7 @@ public class Adivinador extends JFrame {
 
     private void initializeColors() {
         colors = new Color[] {
-                new Color(0, 0, 128),    
+                new Color(0, 0, 128),
                 new Color(135, 206, 250),
                 new Color(255, 255, 0),
                 new Color(255, 165, 0),
@@ -150,5 +151,14 @@ public class Adivinador extends JFrame {
             randomNumber = (int) (limitemenor + Math.random() * (limitemayor - limitemenor + 1));
         } while (generatedNumbers.contains(randomNumber));
         return randomNumber;
+    }
+
+    private void restartGame() {
+        limitemenor = 0;
+        limitemayor = 1000000;
+        previousNumber = generateRandomNumber();
+        generatedNumbers.clear();
+        lblNewLabel_1.setText("Tu numero es: " + previousNumber);
+        panel.setBackground(colors[0]);
     }
 }

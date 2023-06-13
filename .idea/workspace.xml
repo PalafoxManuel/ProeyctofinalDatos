@@ -54,7 +54,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685658610424</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="el juego ya acepta ambos limites y no iran a numeros previaemnte visitados con ninguno de los 2">
+      <created>1685841412169</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685841412169</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
