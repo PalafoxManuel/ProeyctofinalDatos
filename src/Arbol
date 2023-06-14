@@ -1,0 +1,289 @@
+public class Arbol {
+	/* Atributos o elementos*/
+    private Nodo raiz;
+    private int altura, cantidad;
+ 
+    /* Contructores */
+    public Arbol( int valor ) {
+        this.raiz = new Nodo( valor );
+    }
+ 
+    public Arbol( Nodo raiz ) {
+        this.raiz = raiz;
+    }
+ 
+    /* Setters y Getters */
+    public Nodo getRaiz() {
+        return raiz;
+    }
+ 
+    public void setRaiz(Nodo raiz) {
+        this.raiz = raiz;
+    }
+    
+    private void addNodo( Nodo nodo, Nodo raiz ) {
+        /* 2.- Partiendo de la ra�z preguntamos: Nodo == null ( o no existe ) ? */
+        if ( raiz == null ) {
+            /* 3.- En caso afirmativo X pasa a ocupar el lugar del nodo y ya 
+             * hemos ingresado nuestro primer dato.*/
+            this.setRaiz(nodo);
+            raiz.setPadre(null);//
+        }
+        else {
+            /* 4.- En caso negativo preguntamos: X < Nodo */
+            if ( nodo.getValor() < raiz.getValor() ) {
+                /* 5.- En caso de ser menor pasamos al Nodo de la IZQUIERDA del
+                 * que acabamos de preguntar y repetimos desde el paso 2 
+                 * partiendo del Nodo al que acabamos de visitar */
+                if (raiz.getHojaIzquierda() == null) {
+                    raiz.setHojaIzquierda(nodo);
+                    raiz.getHojaIzquierda().setPadre(raiz);//asignar el nodo padre al nodo
+                }
+                else {
+                    addNodo( nodo , raiz.getHojaIzquierda());
+                }
+            }
+            else {
+                /* 6.- En caso de ser mayor pasamos al Nodo de la DERECHA y tal
+                 * cual hicimos con el caso anterior repetimos desde el paso 2
+                 * partiendo de este nuevo Nodo.*/
+                if (raiz.getHojaDerecha() == null) {
+                    raiz.setHojaDerecha(nodo);
+                    raiz.getHojaDerecha().setPadre(raiz);//
+                }
+                else {
+                    addNodo( nodo, raiz.getHojaDerecha());
+                }
+            }
+        }
+    }
+ 
+    public void addNodo( Nodo nodo ) {
+        this.addNodo( nodo , this.raiz );
+    }
+    /*---------------------RECORRIDO INORDEN----------------------*/
+    private void recorridoInorden(Nodo nodo){
+    	if(nodo.getHojaIzquierda()!= null){
+    		recorridoInorden(nodo.getHojaIzquierda());
+    	}
+    	System.out.print(nodo.getValor()+" ");
+    	
+    	if(nodo.getHojaDerecha()!= null){
+    		recorridoInorden(nodo.getHojaDerecha());
+    	}
+    }
+    
+    public void inorden(){
+    	recorridoInorden(this.raiz);
+    }
+    
+    /*---------------------RECORRIDO PREORDEN----------------------*/
+    private void recorridoPreorden(Nodo nodo){
+    	//PENDIENTE...
+    	System.out.print(nodo.getValor()+" ");
+    	
+    	if(nodo.getHojaIzquierda()!=null) {
+    		recorridoPreorden(nodo.getHojaIzquierda());
+    	}
+    	
+    	if(nodo.getHojaDerecha()!=null) {
+    		recorridoPreorden(nodo.getHojaDerecha());
+    	}
+    	
+    }
+    
+    public void preorden(){
+    	recorridoPreorden(this.raiz);
+    }
+    /*---------------------RECORRIDO POSTORDEN----------------------*/
+    private void recorridoPostorden(Nodo nodo){
+    	//PENDIENTE...
+    	if(nodo.getHojaIzquierda()!=null) {
+    		recorridoPostorden(nodo.getHojaIzquierda());
+    	}
+    	
+    	if(nodo.getHojaDerecha()!=null) {
+    		recorridoPostorden(nodo.getHojaDerecha());
+    	}
+    	
+    	System.out.print(nodo.getValor()+" ");
+    	
+    }
+    
+    public void postorden(){
+    	recorridoPostorden(this.raiz);
+    }
+    /*---------------------NIVEL O ALTURA----------------------*/
+    private void altura(Nodo visitado, int nivel) {
+        if (visitado != null) {
+            altura(visitado.getHojaIzquierda(), nivel + 1);
+            
+            if (nivel > altura) {
+                altura = nivel;
+            }
+            altura(visitado.getHojaDerecha() , nivel + 1);
+        }
+    }
+
+    public int altura() {
+        altura = 0;
+        altura(raiz, 0);
+        return altura;
+    }
+
+    /*---------------------PESO----------------------*/
+    private void peso(Nodo reco) {
+        if (reco != null) {
+            cantidad++;
+            peso(reco.getHojaIzquierda());
+            peso(reco.getHojaDerecha());
+        }
+    }
+    
+    public int peso() {
+        cantidad = 0;
+        peso(raiz);
+        return cantidad;
+    }
+
+    /*---------------------BUSQUEDA DE UN NODO----------------------*/
+    /*Consiste en encontrar determinado dato dentro del �rbol, recorriendo cada uno de los nodos. 
+     * La b�squeda de un nodo comienza en el nodo ra�z y sigue estos pasos:
+		1.- El dato buscado se compara con el dato del nodo ra�z.
+		2.- Si el dato buscado es mayor que el dato ra�z, la b�squeda se reanuda en el sub�rbol derecha.
+		Si el dato buscado es menor que el dato ra�z, la b�squeda se reanuda con el sub�rbol izquierdo.
+		3.- Si los datos son iguales, la b�squeda se detiene y se muestra un mensaje que diga:
+		"El nodo X si existe en el arbol.", en caso contrario decir que "No existe el nodo".*/
+    
+    //PENDIENTE...
+    
+	public void buscarNodo(int datoNodo, Nodo raiz) {
+		if (raiz != null) {
+			if (raiz.getValor() == datoNodo) {
+				System.out.println("\n" + "El nodo: " + datoNodo + " si existe dentro del arbol");
+			} else if (datoNodo > raiz.getValor()) {
+				buscarNodo(datoNodo, raiz.getHojaDerecha());
+			} else if (datoNodo < raiz.getValor()) {
+				buscarNodo(datoNodo, raiz.getHojaIzquierda());
+			}
+		} else {
+			System.out.println("\n"+"El nodo no existe");
+		}
+	}
+    
+    public void buscarNodo(int dato) {
+    	buscarNodo(dato,this.raiz);
+    }
+
+	/*-------------ELIMINAR UN NODO----------------------------------*/    
+    public boolean removeNodo( Nodo nodo ) {
+    	 
+        /* Creamos variables para saber si tiene hijos izquierdo y derecho */
+        boolean tieneNodoDerecha = nodo.getHojaDerecha() != null ? true : false;
+        boolean tieneNodoIzquierda = nodo.getHojaIzquierda() != null ? true : false;
+     
+        /* Verificamos los 3 casos diferentes y llamamos a la funci�n correspondiente */
+     
+        /* Caso 1: No tiene hijos */
+        if (!tieneNodoDerecha && !tieneNodoIzquierda) {
+            return removeNodoCaso1( nodo );
+        }
+     
+        /* Caso 2: Tiene un hijo a la derecha y el otro no */
+        if ( tieneNodoDerecha && !tieneNodoIzquierda ) {
+            return removeNodoCaso2( nodo );
+        }
+     
+        /* Caso 2: Tiene un hijo a la izquierda y el otro no */
+        if ( !tieneNodoDerecha && tieneNodoIzquierda ) {
+            return removeNodoCaso2( nodo );
+        }
+     
+        /* Caso 3: Tiene ambos hijos */
+        if ( tieneNodoDerecha && tieneNodoIzquierda ) {
+            return removeNodoCaso3( nodo );
+        }
+     
+        return false;
+    }
+    
+    private boolean removeNodoCaso1( Nodo nodo ) {
+        /* lo que hay que hacer es borrar el nodo y establecer el apuntador de su padre a 
+         * nulo.
+     	Guardemos los hijos del padre temporalmente para saber cu�l de sus hijos hay que 
+         * eliminar*/
+        Nodo hijoIzquierdo = nodo.getPadre().getHojaIzquierda();
+        Nodo hijoDerecho = nodo.getPadre().getHojaDerecha();
+     
+        if ( hijoIzquierdo == nodo ) {
+            nodo.getPadre().setHojaIzquierda( null );
+            return true;
+        }
+     
+        if ( hijoDerecho == nodo) {
+            nodo.getPadre().setHojaDerecha( null );
+            return true;
+        }
+     
+        return false;
+    }
+    
+    private boolean removeNodoCaso2( Nodo nodo ) {
+        /* Borrar el Nodo y el sub�rbol que ten�a pasa a ocupar su lugar.
+    	Guardemos los hijos del padre temporalmente para saber cu�l de sus hijos hay que 
+         * eliminar*/
+        Nodo hijoIzquierdo = nodo.getPadre().getHojaIzquierda();
+        Nodo hijoDerecho = nodo.getPadre().getHojaDerecha();
+     
+        /*Buscamos el hijo existente del nodo que queremos eliminar*/
+        Nodo hijoActual = nodo.getHojaIzquierda() != null ? 
+               nodo.getHojaIzquierda() : nodo.getHojaDerecha();
+     
+        if ( hijoIzquierdo == nodo ) {
+            nodo.getPadre().setHojaIzquierda( hijoActual );
+     
+            /* Eliminando todas las referencias hacia el nodo */
+            hijoActual.setPadre(nodo.getPadre());
+            nodo.setHojaDerecha(null);
+            nodo.setHojaIzquierda(null);
+     
+            return true;
+        }
+     
+        if ( hijoDerecho == nodo) {
+            nodo.getPadre().setHojaDerecha( hijoActual );
+     
+            /* Eliminando todas las referencias hacia el nodo */
+            hijoActual.setPadre(nodo.getPadre());
+            nodo.setHojaDerecha(null);
+            nodo.setHojaIzquierda(null);
+     
+            return true;
+        } 
+     
+        return false;
+    }
+    
+    private boolean removeNodoCaso3( Nodo nodo ) {
+        /* Tomar el hijo derecho del Nodo que queremos eliminar */
+        Nodo nodoMasALaIzquierda = recorrerIzquierda( nodo.getHojaDerecha() );
+        
+        if ( nodoMasALaIzquierda != null ) {
+            /*Reemplazamos el valor del nodo que queremos eliminar por el nodo que 
+             * encontramos*/
+            nodo.setValor( nodoMasALaIzquierda.getValor() );
+            /*Eliminar este nodo de las formas que conocemos ( caso 1, caso 2 )*/
+            removeNodo( nodoMasALaIzquierda );
+            return true;
+        }
+        return false;
+    }
+     
+    /* Recorrer de forma recursiva hasta encontrar el nodo m�s a la izquierda */
+    private Nodo recorrerIzquierda(Nodo nodo) {
+        if (nodo.getHojaIzquierda() != null) {
+            return recorrerIzquierda( nodo.getHojaIzquierda() );
+        }
+        return nodo;
+    }
+}
